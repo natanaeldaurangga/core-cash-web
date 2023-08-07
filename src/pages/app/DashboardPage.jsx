@@ -9,13 +9,32 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import PaymentsIcon from "@mui/icons-material/Payments";
+import GradingIcon from "@mui/icons-material/Grading";
+import PaymentIcon from "@mui/icons-material/Payment";
+import AppLogo from "../../assets/components/Utility/AppLogo";
 
-// const DashboardMenu
-
+// TODO: Lanjut untuk integrasi bikin halaman kas dan integrasi halaman kas
 const DashboardPage = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
+
+  const menuList = [
+    {
+      name: "Kas",
+      path: "/app/cash",
+      icon: <PaymentsIcon />,
+    },
+    {
+      name: "Piutang",
+      path: "/app/receivable",
+      icon: <GradingIcon />,
+    },
+    {
+      name: "Utang",
+      path: "/app/payable",
+      icon: <PaymentIcon />,
+    },
+  ];
 
   return (
     <>
@@ -25,14 +44,13 @@ const DashboardPage = () => {
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
       >
+        <AppLogo sx={{ height: "2rem", alignSelf: "center" }} />
         <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
+          {menuList.map((obj, index) => (
+            <ListItem key={index} disablePadding>
+              <ListItemButton component="a" href={obj.path}>
+                <ListItemIcon>{obj.icon}</ListItemIcon>
+                <ListItemText primary={obj.name} />
               </ListItemButton>
             </ListItem>
           ))}

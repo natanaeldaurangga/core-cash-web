@@ -5,6 +5,7 @@ import RegistrationPage from "../pages/auth/RegistrationPage";
 import RequestResetPasswordPage from "../pages/auth/RequestResetPasswordPage";
 import ResetPasswordPage from "../pages/auth/RequestPasswordPage";
 import DashboardPage from "../pages/app/DashboardPage";
+import ProfilePicturePage from "../pages/auth/ProfilePicturePage";
 
 const AppRouter = () => {
   return (
@@ -13,6 +14,7 @@ const AppRouter = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/register-picture" element={<ProfilePicturePage />} />
         <Route path="/forgot-password" element={<RequestResetPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         {/* TODO: Lanjut bikin dashboard page */}

@@ -5,7 +5,12 @@ const DashboardDrawer = ({ anchor, open, onClose, children }) => {
     <>
       <Drawer anchor={anchor} open={open} onClose={onClose}>
         <Box
-          sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
+          sx={{
+            width: 250,
+            display: "flex",
+            flexDirection: "column",
+            paddingTop: "1.125rem",
+          }}
           role="presentation"
           onClick={onClose}
           onKeyDown={onClose}

@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  FormHelperText,
-  Input,
-  InputLabel,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import AppLogo from "../../assets/components/Utility/AppLogo";
 
 // TODO: Dari registration masuk ke halaman input gambar
@@ -58,7 +49,7 @@ const RegistrationPage = () => {
             }}
             variant="contained"
           >
-            Register
+            Next
           </Button>
         </Box>
         <Box
