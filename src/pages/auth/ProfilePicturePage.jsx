@@ -1,12 +1,20 @@
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import coreCashLogo from "../../assets/img/core-cash-logo.png";
 import AddIcon from "@mui/icons-material/Add";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useGlobalContext } from "../../context/services/GlobalProvider";
 
 const ProfilePicturePage = () => {
   const inputFileRef = useRef();
 
   const [profilePicture, setProfilePicture] = useState(null);
+
+  // TODO: Lanjut set image di RegistrationPool terus hit registration api (post)
+  const { RegistrationPool } = useGlobalContext();
+
+  useEffect(() => {
+    console.log(RegistrationPool.registrationPayload);
+  }, [RegistrationPool]);
 
   const onChoosePicture = () => {
     inputFileRef.current.click();

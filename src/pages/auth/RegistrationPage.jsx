@@ -1,8 +1,27 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import AppLogo from "../../assets/components/Utility/AppLogo";
+import { useState } from "react";
+import { useGlobalContext } from "../../context/services/GlobalProvider";
+import { useNavigate } from "react-router-dom";
 
 // TODO: Dari registration masuk ke halaman input gambar
 const RegistrationPage = () => {
+  const { RegistrationPool } = useGlobalContext();
+
+  const [formField, setFormField] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const navigate = useNavigate();
+
+  const onRegistNext = () => {
+    RegistrationPool.setRegistrationFieldPayload(formField);
+    navigate("/register-picture");
+  };
+
   return (
     <Box
       sx={{
@@ -35,10 +54,37 @@ const RegistrationPage = () => {
             marginTop: "2.25rem",
           }}
         >
-          <TextField variant="outlined" label="Full Name" />
-          <TextField variant="outlined" type="email" label="Email" />
-          <TextField variant="outlined" type="password" label="Password" />
           <TextField
+            value={formField.name}
+            onChange={(e) =>
+              setFormField({ ...formField, name: e.target.value })
+            }
+            variant="outlined"
+            label="Full Name"
+          />
+          <TextField
+            value={formField.email}
+            onChange={(e) =>
+              setFormField({ ...formField, email: e.target.value })
+            }
+            variant="outlined"
+            type="email"
+            label="Email"
+          />
+          <TextField
+            value={formField.password}
+            onChange={(e) =>
+              setFormField({ ...formField, password: e.target.value })
+            }
+            variant="outlined"
+            type="password"
+            label="Password"
+          />
+          <TextField
+            value={formField.confirmPassword}
+            onChange={(e) =>
+              setFormField({ ...formField, confirmPassword: e.target.value })
+            }
             variant="outlined"
             type="password"
             label="Repeat Password"
@@ -48,6 +94,7 @@ const RegistrationPage = () => {
               width: "100%",
             }}
             variant="contained"
+            onClick={onRegistNext}
           >
             Next
           </Button>

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import Navbar from "../../assets/components/Navbar";
-import DashboardNavbar from "../../assets/components/dashboard/DashboardNavbar";
-import DashboardDrawer from "../../assets/components/dashboard/DashboardDrawer";
+import GradingIcon from "@mui/icons-material/Grading";
+import PaymentIcon from "@mui/icons-material/Payment";
+import PaymentsIcon from "@mui/icons-material/Payments";
 import {
   List,
   ListItem,
@@ -9,12 +8,11 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import PaymentsIcon from "@mui/icons-material/Payments";
-import GradingIcon from "@mui/icons-material/Grading";
-import PaymentIcon from "@mui/icons-material/Payment";
+import { useState } from "react";
 import AppLogo from "../../assets/components/Utility/AppLogo";
+import DashboardDrawer from "../../assets/components/dashboard/DashboardDrawer";
+import DashboardNavbar from "../../assets/components/dashboard/DashboardNavbar";
 
-// TODO: Lanjut untuk integrasi bikin halaman kas dan integrasi halaman kas
 const DashboardPage = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
 
