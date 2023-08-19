@@ -5,11 +5,15 @@ import "./index.css";
 import "typeface-poppins";
 import { ThemeProvider } from "@mui/material";
 import { customTheme } from "./MUI/customTheme.js";
+import GlobalProvider from "./context/services/GlobalProvider.jsx";
+import ApiProvider from "./context/ApiProvider.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ThemeProvider theme={customTheme}>
-      <App />
-    </ThemeProvider>
+    <ApiProvider>
+      <ThemeProvider theme={customTheme}>
+        <App />
+      </ThemeProvider>
+    </ApiProvider>
   </React.StrictMode>
 );

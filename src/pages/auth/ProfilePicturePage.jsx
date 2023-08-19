@@ -3,21 +3,40 @@ import coreCashLogo from "../../assets/img/core-cash-logo.png";
 import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useRef, useState } from "react";
 import { useGlobalContext } from "../../context/services/GlobalProvider";
+import { useAuthContext } from "../../context/services/AuthProvider";
 
 const ProfilePicturePage = () => {
   const inputFileRef = useRef();
 
   const [profilePicture, setProfilePicture] = useState(null);
+  const [btnSubmitText, setBtnSubmitText] = useState("");
 
-  // TODO: Lanjut set image di RegistrationPool terus hit registration api (post)
   const { RegistrationPool } = useGlobalContext();
+
+  // TODO: gimana kalo data dari page registrasi pertama disimpan disession sementara (BE), jadi nggak disimpan di FE
+  const { AuthServices } = useAuthContext();
 
   useEffect(() => {
     console.log(RegistrationPool.registrationPayload);
   }, [RegistrationPool]);
 
+  useEffect(() => {
+    if (profilePicture !== null) {
+      setBtnSubmitText("Daftar");
+    } else {
+      setBtnSubmitText("Skip");
+    }
+  }, [profilePicture]);
+
   const onChoosePicture = () => {
     inputFileRef.current.click();
+    // RegistrationPool.setRegistrationFieldPayload({ ... })
+  };
+
+  const onSubmitPicture = () => {
+    console.log(typeof profilePicture);
+
+    AuthServices.register(RegistrationPool);
   };
 
   return (
@@ -61,7 +80,11 @@ const ProfilePicturePage = () => {
           >
             <Avatar
               alt="user-img"
-              src={profilePicture && URL.createObjectURL(profilePicture)}
+              src={
+                typeof profilePicture === "string" || profilePicture === null
+                  ? profilePicture
+                  : URL.createObjectURL(profilePicture)
+              }
               sx={{ height: "6rem", width: "6rem" }}
             />
             <input
@@ -86,8 +109,9 @@ const ProfilePicturePage = () => {
                 marginTop: "1.5rem",
               }}
               variant="contained"
+              onClick={onSubmitPicture}
             >
-              Lewati
+              {btnSubmitText}
             </Button>
           </Box>
           <Box

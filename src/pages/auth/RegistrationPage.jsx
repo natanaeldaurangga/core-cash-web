@@ -1,25 +1,74 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
-import AppLogo from "../../assets/components/Utility/AppLogo";
+import {
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
-import { useGlobalContext } from "../../context/services/GlobalProvider";
 import { useNavigate } from "react-router-dom";
+import AppLogo from "../../assets/components/Utility/AppLogo";
+import { useAuthContext } from "../../context/services/AuthProvider";
+import FieldError from "../../utilities/FieldError";
 
 // TODO: Dari registration masuk ke halaman input gambar
 const RegistrationPage = () => {
-  const { RegistrationPool } = useGlobalContext();
+  const { AuthServices } = useAuthContext();
 
-  const [formField, setFormField] = useState({
-    name: "",
+  const [registerProcess, setRegisterProcess] = useState(false);
+
+  const formFieldTemplate = {
+    fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
-  });
+  };
+
+  const fieldErrorsTemplate = {
+    FullName: [],
+    Email: [],
+    Password: [],
+    ConfirmPassword: [],
+    ProfilePicture: [],
+  };
+
+  const [formField, setFormField] = useState(formFieldTemplate);
+
+  const [fieldErrors, setFieldErrors] = useState(fieldErrorsTemplate);
+
+  const [nonFieldErrors, setNonFieldErrors] = useState(false);
 
   const navigate = useNavigate();
+  const [profilePicture, setProfilePicture] = useState(null);
 
-  const onRegistNext = () => {
-    RegistrationPool.setRegistrationFieldPayload(formField);
-    navigate("/register-picture");
+  const clearFormField = () => {
+    setFormField(formFieldTemplate);
+    setFieldErrors(fieldErrorsTemplate);
+  };
+
+  const onRegistrationSubmit = () => {
+    setRegisterProcess(true);
+    AuthServices.register({ ...formField, profilePicture })
+      .then((res) => {
+        clearFormField();
+        navigate("/confirm-email");
+      })
+      .catch((err) => {
+        const status = err?.response?.status;
+        if (status === 400) {
+          const errors = err?.response?.data?.errors;
+          setFieldErrors({ ...fieldErrors, ...errors });
+        }
+
+        if (status > 400 && status < 500) {
+          const errors = err.response.data;
+          setNonFieldErrors(errors);
+        }
+      })
+      .finally(() => {
+        setRegisterProcess(false);
+      });
   };
 
   return (
@@ -27,13 +76,14 @@ const RegistrationPage = () => {
       sx={{
         width: "100vw",
         height: "100vh",
-        display: "grid",
-        placeItems: "center",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "start",
       }}
     >
       <Box
         sx={{
-          width: { xs: "300px", sm: "400px", md: "500px" },
+          width: { xs: "380px", sm: "400px", md: "500px" },
           minHeight: "500px",
           boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
           borderRadius: "0.25rem",
@@ -55,12 +105,14 @@ const RegistrationPage = () => {
           }}
         >
           <TextField
-            value={formField.name}
+            value={formField.fullName}
             onChange={(e) =>
-              setFormField({ ...formField, name: e.target.value })
+              setFormField({ ...formField, fullName: e.target.value })
             }
             variant="outlined"
             label="Full Name"
+            error={fieldErrors?.FullName?.length !== 0}
+            helperText={<FieldError errors={fieldErrors?.FullName} />}
           />
           <TextField
             value={formField.email}
@@ -70,6 +122,8 @@ const RegistrationPage = () => {
             variant="outlined"
             type="email"
             label="Email"
+            error={fieldErrors?.Email?.length !== 0}
+            helperText={<FieldError errors={fieldErrors?.Email} />}
           />
           <TextField
             value={formField.password}
@@ -79,6 +133,8 @@ const RegistrationPage = () => {
             variant="outlined"
             type="password"
             label="Password"
+            error={fieldErrors?.Password?.length !== 0}
+            helperText={<FieldError errors={fieldErrors?.Password} />}
           />
           <TextField
             value={formField.confirmPassword}
@@ -87,16 +143,41 @@ const RegistrationPage = () => {
             }
             variant="outlined"
             type="password"
-            label="Repeat Password"
+            label="Confirm Password"
+            error={fieldErrors?.ConfirmPassword?.length !== 0}
+            helperText={<FieldError errors={fieldErrors?.ConfirmPassword} />}
+          />
+          <Avatar
+            alt="user-img"
+            src={
+              typeof profilePicture === "string" || profilePicture === null
+                ? profilePicture
+                : URL.createObjectURL(profilePicture)
+            }
+            sx={{
+              height: "6rem",
+              width: "6rem",
+              margin: "auto",
+              marginTop: "1.5rem",
+            }}
+          />
+
+          <TextField
+            variant="outlined"
+            type="file"
+            onChange={(e) => setProfilePicture(e.currentTarget.files[0])}
+            error={fieldErrors?.ProfilePicture?.length !== 0}
+            helperText={<FieldError errors={fieldErrors?.ProfilePicture} />}
           />
           <Button
             sx={{
               width: "100%",
             }}
             variant="contained"
-            onClick={onRegistNext}
+            onClick={onRegistrationSubmit}
+            disabled={registerProcess}
           >
-            Next
+            {registerProcess ? <CircularProgress size={25} /> : <>{"Submit"}</>}
           </Button>
         </Box>
         <Box

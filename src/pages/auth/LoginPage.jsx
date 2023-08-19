@@ -1,7 +1,72 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import coreCashLogo from "../../assets/img/core-cash-logo.png";
+import { useState } from "react";
+import { useAuthContext } from "../../context/services/AuthProvider";
+import { useNavigate } from "react-router-dom";
+import FieldError from "../../utilities/FieldError";
 
 const LoginPage = () => {
+  const { AuthServices } = useAuthContext();
+
+  const navigate = useNavigate();
+
+  const loginPayloadsTemplate = {
+    email: "",
+    password: "",
+  };
+
+  const fieldErrorsTemplate = {
+    Email: [],
+    Password: [],
+  };
+
+  const [loginPayloads, setLoginPayloads] = useState(loginPayloadsTemplate);
+
+  const [fieldErrors, setFieldErrors] = useState(fieldErrorsTemplate);
+
+  const [nonFieldErrors, setNonFieldErrors] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const clearFields = () => {
+    setLoginPayloads(loginPayloadsTemplate);
+    setFieldErrors(fieldErrorsTemplate);
+  };
+
+  const onLoginSubmit = () => {
+    console.log(loginPayloads);
+    setIsLoading(true);
+    setFieldErrors(fieldErrorsTemplate);
+    AuthServices.login(loginPayloads)
+      .then((res) => {
+        navigate("/app");
+        clearFields();
+      })
+      .catch((err) => {
+        const status = err?.response?.status;
+        if (status === 400) {
+          const errors = err?.response?.data?.errors;
+          setFieldErrors({ ...fieldErrors, ...errors });
+        }
+
+        if (status > 400 && status < 500) {
+          const errors = err.response.data;
+          setNonFieldErrors(errors);
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   return (
     <Box
       sx={{
@@ -34,8 +99,34 @@ const LoginPage = () => {
             marginTop: "2rem",
           }}
         >
-          <TextField variant="outlined" type="email" label="Email" />
-          <TextField variant="outlined" type="password" label="Password" />
+          {nonFieldErrors && (
+            <Alert severity="error">
+              <AlertTitle>Error</AlertTitle>
+              {nonFieldErrors}
+            </Alert>
+          )}
+          <TextField
+            variant="outlined"
+            type="email"
+            label="Email"
+            value={loginPayloads.email}
+            onChange={(e) =>
+              setLoginPayloads({ ...loginPayloads, email: e.target.value })
+            }
+            error={fieldErrors?.Email?.length !== 0}
+            helperText={<FieldError errors={fieldErrors?.Email} />}
+          />
+          <TextField
+            variant="outlined"
+            type="password"
+            label="Password"
+            value={loginPayloads.password}
+            onChange={(e) =>
+              setLoginPayloads({ ...loginPayloads, password: e.target.value })
+            }
+            error={fieldErrors?.Password?.length !== 0}
+            helperText={<FieldError errors={fieldErrors?.Password} />}
+          />
           <Box
             sx={{
               display: "flex",
@@ -66,8 +157,10 @@ const LoginPage = () => {
               width: "100%",
             }}
             variant="contained"
+            onClick={onLoginSubmit}
+            disabled={isLoading}
           >
-            Login
+            {isLoading ? <CircularProgress size={25} /> : <>{"Login"}</>}
           </Button>
         </Box>
         <Box

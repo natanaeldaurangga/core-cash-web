@@ -36,17 +36,23 @@ function LandingPage() {
             <Typography fontSize={"2.25rem"} fontWeight={400}>
               Terencana. Terukur.
             </Typography>
-            <Typography fontSize={"3.5rem"} fontWeight={600}>
-              Aplikasi Cash
+            <Box sx={{ display: "flex", gap: "0.625rem" }}>
+              <Typography
+                fontSize={"3.5rem"}
+                display={"inline"}
+                fontWeight={600}
+              >
+                Core
+              </Typography>
               <Typography
                 display={"inline"}
                 color={"#4153AF"}
                 fontSize={"3.5rem"}
                 fontWeight={600}
               >
-                Core
+                Cash
               </Typography>
-            </Typography>
+            </Box>
           </Box>
         </Box>
       </CardMedia>

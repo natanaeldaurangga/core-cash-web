@@ -3,8 +3,6 @@ import React, { createContext, useContext, useState } from "react";
 const GlobalContext = createContext();
 
 const GlobalProvider = ({ children }) => {
-  // TODO: Bikin global variable buat nyimpan url api dan lain-lain
-
   const BASE_URL = "https://localhost:7116/";
 
   const API_URL = BASE_URL + "api/";
@@ -14,27 +12,17 @@ const GlobalProvider = ({ children }) => {
     API_URL,
   };
 
-  //   TODO: Lanjut bikin registration cek apakah context registration ini tetep bisa diakses di page upload profile picture
-  //   ============= REGISTRATION PAYLOAD ======================
-  const [registrationPayload, setRegistrationPaylod] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    profilePicture: null,
-  });
+  const [sessionDialog, setSessionDialog] = useState(false);
 
-  const setRegistrationFieldPayload = (params) => {
-    setRegistrationPaylod({ ...registrationPayload, ...params });
-  };
-
-  const RegistrationPool = {
-    registrationPayload,
-    setRegistrationFieldPayload,
+  const ToggleDialog = {
+    session: {
+      sessionDialog,
+      setSessionDialog,
+    },
   };
 
   return (
-    <GlobalContext.Provider value={{ ApiAttribute, RegistrationPool }}>
+    <GlobalContext.Provider value={{ ApiAttribute, ToggleDialog }}>
       {children}
     </GlobalContext.Provider>
   );
