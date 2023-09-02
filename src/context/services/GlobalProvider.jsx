@@ -7,17 +7,30 @@ const GlobalProvider = ({ children }) => {
 
   const API_URL = BASE_URL + "api/";
 
+  const IMAGE_URL = API_URL + "Image/";
+
+  const getImage = (fileName) => {
+    return IMAGE_URL + fileName;
+  };
+
   const ApiAttribute = {
     BASE_URL,
     API_URL,
+    IMAGE_URL,
+    getImage
   };
 
   const [sessionDialog, setSessionDialog] = useState(false);
+  const [logoutDialog, setLogoutDialog] = useState(false);
 
   const ToggleDialog = {
     session: {
       sessionDialog,
       setSessionDialog,
+    },
+    logout: {
+      logoutDialog,
+      setLogoutDialog,
     },
   };
 

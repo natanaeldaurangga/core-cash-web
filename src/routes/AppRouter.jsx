@@ -1,21 +1,28 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { useAuthContext } from "../context/services/AuthProvider";
 import LandingPage from "../pages/LandingPage";
+import DashboardPage from "../pages/app/DashboardPage";
 import LoginPage from "../pages/auth/LoginPage";
 import RegistrationPage from "../pages/auth/RegistrationPage";
+import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
 import RequestResetPasswordPage from "../pages/auth/RequestResetPasswordPage";
-import ResetPasswordPage from "../pages/auth/RequestPasswordPage";
 import ConfirmEmail from "../pages/info/ConfirmEmail";
 import ConfirmedEmail from "../pages/info/ConfirmedEmail";
-import TestRedirect from "../pages/TestRedirect";
-import UserRoutes from "./UserRoutes";
-import DashboardPage from "../pages/app/DashboardPage";
+import CashPage from "../pages/app/cash/CashPage";
+
+const userProtect = (component, authServices) => {
+  if (!authServices.getAuthorization()) {
+    return <Navigate to={"/login"} />;
+  }
+
+  return <>{component}</>;
+};
 
 const AppRouter = () => {
+  const { AuthServices } = useAuthContext();
+
   return (
     <>
-      
-
-      {/* START: No Need Authorization Pages */}
       <Routes>
         <Route path="/" element={<LandingPage />} />
 
@@ -31,15 +38,17 @@ const AppRouter = () => {
         <Route path="/email-confirmed" element={<ConfirmedEmail />} />
         {/* END: Information Page */}
 
-        <Route path="/test-redirect" element={<TestRedirect />} />
+        {/* START: Need Authorization Pages */}
+        <Route
+          path="/app"
+          element={userProtect(<DashboardPage />, AuthServices)}
+        />
+        <Route
+          path="/app/cash"
+          element={userProtect(<CashPage />, AuthServices)}
+        />
+        {/* END: Need Authorization Pages */}
       </Routes>
-      {/* END: No Need Authorization Pages */}
-
-      {/* START: Need Authorization Pages */}
-      <UserRoutes>
-        <Route path="/app" element={<DashboardPage />} />
-      </UserRoutes>
-      {/* END: Need Authorization Pages */}
     </>
   );
 };

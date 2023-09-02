@@ -1,7 +1,32 @@
 import { Avatar, Box, Dialog, DialogTitle, Typography } from "@mui/material";
 import { blue } from "@mui/material/colors";
+import { useAuthContext } from "../../../context/services/AuthProvider";
+import { useEffect, useState } from "react";
+import { useGlobalContext } from "../../../context/services/GlobalProvider";
 
 const UserProfile = ({ open, handleClose }) => {
+  const { AuthServices } = useAuthContext();
+
+  const { ApiAttribute } = useGlobalContext();
+
+  const [userData, setUserData] = useState({
+    userId: "",
+    fullName: "",
+    email: "",
+    role: "",
+    profilePicture: "",
+  });
+
+  const normalizeRoleName = (roleName = "") => {
+    return roleName.split(/[-_]/g).pop();
+  };
+
+  useEffect(() => {
+    const userData = AuthServices.authData();
+    console.log(userData);
+    setUserData(userData);
+  }, [AuthServices]);
+
   return (
     <>
       <Dialog onClose={handleClose} open={open}>
@@ -18,6 +43,10 @@ const UserProfile = ({ open, handleClose }) => {
         >
           <Avatar
             alt="User"
+            src={
+              userData?.profilePicture &&
+              ApiAttribute.getImage(userData?.profilePicture)
+            }
             sx={{
               bgcolor: blue[100],
               color: blue[600],
@@ -36,13 +65,13 @@ const UserProfile = ({ open, handleClose }) => {
             }}
           >
             <Typography fontSize={"1rem"} fontWeight={600}>
-              John Doe
+              {userData.fullName}
             </Typography>
             <Typography fontSize={"0.875rem"} color={"gray"}>
-              johndoe@example.com
+              {userData.email}
             </Typography>
             <Typography fontSize={"0.875rem"} color={"gray"}>
-              User
+              {normalizeRoleName(userData.role)}
             </Typography>
           </Box>
         </Box>

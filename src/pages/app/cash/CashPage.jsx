@@ -1,8 +1,8 @@
-import { Box, Card } from "@mui/material";
-import Dashboard from "./Dashboard";
-import AppLogo from "../../assets/components/Utility/AppLogo";
+import React from "react";
+import Dashboard from "../Dashboard";
+import { Card } from "@mui/material";
 
-const DashboardPage = () => {
+const CashPage = () => {
   return (
     <>
       <Dashboard>
@@ -17,11 +17,11 @@ const DashboardPage = () => {
             placeItems: "center",
           }}
         >
-          <AppLogo />
+          CashPage
         </Card>
       </Dashboard>
     </>
   );
 };
 
-export default DashboardPage;
+export default CashPage;

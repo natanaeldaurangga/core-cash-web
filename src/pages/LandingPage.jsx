@@ -1,8 +1,16 @@
 import { Box, CardMedia, Typography } from "@mui/material";
 import Navbar from "../assets/components/Navbar";
 import banner from "../assets/img/banner-image.png";
+import { useAuthContext } from "../context/services/AuthProvider";
+import { useEffect } from "react";
 
 function LandingPage() {
+  const { AuthServices } = useAuthContext();
+
+  useEffect(() => {
+    AuthServices.checkSession();
+  }, [AuthServices]);
+
   return (
     <>
       {/* START: Navbar */}

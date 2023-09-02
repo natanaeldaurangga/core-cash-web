@@ -1,42 +1,30 @@
-import { BrowserRouter, useNavigate } from "react-router-dom";
+import { Box } from "@mui/material";
+import { BrowserRouter } from "react-router-dom";
+import LogoutAlert from "./assets/components/alerts/LogoutAlert";
+import SessionEndAlert from "./assets/components/alerts/SessionEndAlert";
 import AppRouter from "./routes/AppRouter";
-import { useGlobalContext } from "./context/services/GlobalProvider";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
-import { useAuthContext } from "./context/services/AuthProvider";
 
 // TODO: Lanjut bikin landing page
 function App() {
-  const { ToggleDialog } = useGlobalContext();
-  const { AuthServices } = useAuthContext();
   return (
-    <>
+    <Box
+      sx={{
+        minWidth: "100vw",
+        minHeight: "100vh",
+        height: "100%",
+        overflowX: "hidden",
+        backgroundColor: "#F0F0F0",
+      }}
+    >
       <BrowserRouter>
         <AppRouter />
       </BrowserRouter>
 
-      <Dialog
-        open={ToggleDialog.session.sessionDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle>{"Session telah berakhir"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Session anda telah berakhir, silahkan login kembali
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => AuthServices.logout()}>Agree</Button>
-        </DialogActions>
-      </Dialog>
-    </>
+      {/* START:ALERTS */}
+      <LogoutAlert />
+      <SessionEndAlert />
+      {/* END:ALERTS */}
+    </Box>
   );
 }
 

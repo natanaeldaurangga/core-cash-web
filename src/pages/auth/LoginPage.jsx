@@ -47,7 +47,9 @@ const LoginPage = () => {
     setFieldErrors(fieldErrorsTemplate);
     AuthServices.login(loginPayloads)
       .then((res) => {
-        navigate("/app");
+        console.log(res);
+        // navigate("/app");
+        window.location.href = "/app";
         clearFields();
       })
       .catch((err) => {
@@ -87,6 +89,7 @@ const LoginPage = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          backgroundColor: "#FFFFFF",
         }}
       >
         <Box component={"img"} src={coreCashLogo} />

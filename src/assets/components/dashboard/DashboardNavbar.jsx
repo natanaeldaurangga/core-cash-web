@@ -7,14 +7,33 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import AppLogo from "../Utility/AppLogo";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import UserProfile from "./UserProfile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuthContext } from "../../../context/services/AuthProvider";
+import { useGlobalContext } from "../../../context/services/GlobalProvider";
 
 const DashboardNavbar = ({ onClickMenu }) => {
   const [openUserProfile, setOpenUserProfile] = useState(false);
+
+  const { AuthServices } = useAuthContext();
+
+  const [userData, setUserData] = useState({
+    userId: "",
+    fullName: "",
+    email: "",
+    role: "",
+    profilePicture: "",
+  });
+
+  useEffect(() => {
+    setUserData(AuthServices.authData());
+  }, [AuthServices]);
+
+  const { ApiAttribute } = useGlobalContext();
+
+  const { ToggleDialog } = useGlobalContext();
 
   return (
     <>
@@ -22,40 +41,51 @@ const DashboardNavbar = ({ onClickMenu }) => {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar
           position="static"
-          color="transparent"
           sx={{
             boxShadow: "0px 0.5px 3px black",
+            backgroundColor: "#FFFFFF",
           }}
         >
           <Toolbar>
             <IconButton
               size="large"
               edge="start"
-              color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
               onClick={onClickMenu}
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              <AppLogo sx={{ height: "2.5rem" }} />
-            </Typography>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1 }}
+            ></Typography>
 
             {/* START: User Profile */}
-            <Tooltip title="Open settings">
+            <Tooltip title="Open profile">
               <IconButton
                 onClick={() => setOpenUserProfile(true)}
                 sx={{ p: 0, marginRight: "1.125rem" }}
               >
-                <Avatar alt="Remy" />
+                <Avatar
+                  alt="Remy"
+                  src={
+                    userData?.profilePicture &&
+                    ApiAttribute.getImage(userData?.profilePicture)
+                  }
+                />
               </IconButton>
             </Tooltip>
             {/* END: User Profile */}
 
             {/* START: Logout button */}
             <Tooltip title="Logout">
-              <IconButton component="a" href="/" color="primary">
+              <IconButton
+                component="a"
+                onClick={() => ToggleDialog.logout.setLogoutDialog(true)}
+                color="primary"
+              >
                 <LogoutIcon />
               </IconButton>
             </Tooltip>

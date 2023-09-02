@@ -1,7 +1,16 @@
 import { Box, Button, TextField } from "@mui/material";
 import AppLogo from "../../assets/components/Utility/AppLogo";
+import { useAuthContext } from "../../context/services/AuthProvider";
+import { useState } from "react";
 
 const ResetPasswordPage = () => {
+
+  const { AuthServices } = useAuthContext();
+
+  const [requestProcess, setRequestProcess] = useState();
+
+  
+
   return (
     <Box
       sx={{
@@ -22,6 +31,7 @@ const ResetPasswordPage = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          backgroundColor: "#FFFFFF",
         }}
       >
         <AppLogo />

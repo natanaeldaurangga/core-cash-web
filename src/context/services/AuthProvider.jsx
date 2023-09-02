@@ -5,16 +5,16 @@ import axios from "axios";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const { ApiAttribute } = useGlobalContext();
+  const { ApiAttribute, ToggleDialog } = useGlobalContext();
 
-  // TODO: bikin dialog untuk info jika session user sudah berakhir
   const checkSession = () => {
     axios.defaults.headers.common = getAuthorization();
     let result = false;
     axios
       .get(ApiAttribute.API_URL + "Auth/CheckSession")
       .then((res) => {
-        if (res.status == 200) result = true;
+        if (res.status == 200) ToggleDialog.session.setSessionDialog(true);
+        result = true;
       })
       .catch((err) => {
         result = false;
@@ -29,7 +29,7 @@ const AuthProvider = ({ children }) => {
 
   const getAuthorization = () => {
     let user = authData();
-    let token = user?.authorized?.jwtToken || false;
+    let token = user?.jwtToken;
     return token && "Bearer " + token;
   };
 
@@ -37,6 +37,37 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("authorized");
     window.location.href = "/login";
   };
+
+  // START: Reset Password Services
+  const resetPassword = async (token, params) => {
+    const payload = {
+      password: "",
+      repeatPassword: "",
+    };
+
+    if (params?.password) payload.password = params?.password;
+    if (params?.confirmPassword)
+      payload.confirmPassword = params?.confirmPassword;
+
+    return await axios.put(
+      ApiAttribute.API_URL + "Auth/ResetPassword/" + token,
+      params
+    );
+  };
+
+  const requestResetPassword = async (params) => {
+    const payload = {
+      email: "",
+    };
+
+    if (params?.email) payload.email = params?.email;
+
+    return await axios.post(
+      ApiAttribute.API_URL + "Auth/RequestResetPassword",
+      payload
+    );
+  };
+  // END: Reset Password Services
 
   const login = async (params) => {
     let payloads = {
@@ -86,6 +117,8 @@ const AuthProvider = ({ children }) => {
     checkSession,
     getAuthorization,
     authData,
+    resetPassword,
+    requestResetPassword,
     logout,
     login,
     register,

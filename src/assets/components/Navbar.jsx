@@ -1,5 +1,17 @@
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Button,
+  IconButton,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import AppLogo from "./Utility/AppLogo";
+import { useAuthContext } from "../../context/services/AuthProvider";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useGlobalContext } from "../../context/services/GlobalProvider";
+import PersonIcon from "@mui/icons-material/Person";
 
 const MenuBeforeLogin = () => {
   return (
@@ -15,16 +27,35 @@ const MenuBeforeLogin = () => {
 };
 
 const MenuAfterLogin = () => {
+  const { ToggleDialog } = useGlobalContext();
+
   return (
     <>
-      <Button href="/" variant="contained">
-        Log out
-      </Button>
+      {/* START: User Profile */}
+      <Tooltip title="Open dashboard">
+        <IconButton component="a" href="/app">
+          <PersonIcon />
+        </IconButton>
+      </Tooltip>
+      {/* END: User Profile */}
+
+      {/* START: Logout button */}
+      <Tooltip title="Logout">
+        <IconButton
+          onClick={() => ToggleDialog.logout.setLogoutDialog(true)}
+          color="primary"
+        >
+          <LogoutIcon />
+        </IconButton>
+      </Tooltip>
+      {/* END: Logout button */}
     </>
   );
 };
 
 const Navbar = () => {
+  const { AuthServices } = useAuthContext();
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -44,7 +75,11 @@ const Navbar = () => {
               gap: "1.125rem",
             }}
           >
-            <MenuBeforeLogin />
+            {AuthServices.getAuthorization() ? (
+              <MenuAfterLogin />
+            ) : (
+              <MenuBeforeLogin />
+            )}
           </Box>
         </Toolbar>
       </AppBar>

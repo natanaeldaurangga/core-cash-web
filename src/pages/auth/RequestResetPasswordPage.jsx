@@ -1,7 +1,67 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import AppLogo from "../../assets/components/Utility/AppLogo";
+import { useAuthContext } from "../../context/services/AuthProvider";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const RequestResetPasswordPage = () => {
+  const { AuthServices } = useAuthContext();
+
+  const [requestProcess, setRequestProcess] = useState(false);
+
+  const formFieldTemplate = {
+    email: "",
+  };
+
+  const fieldErrorsTemplate = {
+    Email: [],
+  };
+
+  const [formField, setFormField] = useState(formFieldTemplate);
+
+  const [fieldErrors, setFieldErrors] = useState(fieldErrorsTemplate);
+
+  const [nonFieldErrors, setNonFieldErrors] = useState(false);
+
+  const navigate = useNavigate();
+
+  const clearFormField = () => {
+    setFormField(formFieldTemplate);
+    setFieldErrors(fieldErrorsTemplate);
+  };
+
+  const onRequestSubmit = () => {
+    setRequestProcess(true);
+    AuthServices.requestResetPassword(formField)
+      .then((res) => {
+        clearFormField();
+        navigate("/confirm-email");
+      })
+      .catch((err) => {
+        const status = err?.response?.status;
+        if (status === 400) {
+          const errors = err?.response?.data?.errors;
+          setFieldErrors({ ...fieldErrors, ...errors });
+        }
+
+        if (status > 400 && status < 500) {
+          const errors = err.response.data;
+          setNonFieldErrors(errors);
+        }
+      })
+      .finally(() => {
+        setRequestProcess(false);
+      });
+  };
+
   return (
     <>
       <Box
@@ -28,6 +88,7 @@ const RequestResetPasswordPage = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            backgroundColor: "#FFFFFF",
           }}
         >
           <AppLogo />
@@ -40,14 +101,29 @@ const RequestResetPasswordPage = () => {
               marginTop: "2rem",
             }}
           >
-            <TextField variant="outlined" type="email" label="Email" />
+            {nonFieldErrors && (
+              <Alert severity="error">
+                <AlertTitle>Error</AlertTitle>
+                {nonFieldErrors}
+              </Alert>
+            )}
+            <TextField
+              variant="outlined"
+              value={formField.email}
+              onChange={(e) =>
+                setFormField({ ...formField, email: e.target.value })
+              }
+              type="email"
+              label="Email"
+            />
             <Button
               sx={{
                 width: "100%",
               }}
               variant="contained"
+              onClick={onRequestSubmit}
             >
-              Login
+              {requestProcess ? <CircularProgress size={25} /> : <>{"Login"}</>}
             </Button>
           </Box>
           <Box

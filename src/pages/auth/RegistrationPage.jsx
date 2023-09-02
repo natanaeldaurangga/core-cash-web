@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertTitle,
   Avatar,
   Box,
   Button,
@@ -12,7 +14,6 @@ import AppLogo from "../../assets/components/Utility/AppLogo";
 import { useAuthContext } from "../../context/services/AuthProvider";
 import FieldError from "../../utilities/FieldError";
 
-// TODO: Dari registration masuk ke halaman input gambar
 const RegistrationPage = () => {
   const { AuthServices } = useAuthContext();
 
@@ -79,6 +80,7 @@ const RegistrationPage = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "start",
+        paddingBottom: "5rem",
       }}
     >
       <Box
@@ -92,6 +94,9 @@ const RegistrationPage = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          backgroundColor: "#FFFFFF",
+          marginY: "1.5rem",
+          marginBottom: "5rem",
         }}
       >
         <AppLogo />
@@ -104,6 +109,12 @@ const RegistrationPage = () => {
             marginTop: "2.25rem",
           }}
         >
+          {nonFieldErrors && (
+            <Alert severity="error">
+              <AlertTitle>Error</AlertTitle>
+              {nonFieldErrors}
+            </Alert>
+          )}
           <TextField
             value={formField.fullName}
             onChange={(e) =>
