@@ -1,23 +1,39 @@
 import React from "react";
 import Dashboard from "../Dashboard";
-import { Card } from "@mui/material";
+import { Box, Card } from "@mui/material";
+
+const SkeletonCashPage = () => {
+
+}
 
 const CashPage = () => {
+
+
+
   return (
     <>
       <Dashboard>
         <Card
           variant="outlined"
           sx={{
-            margin: "0.5rem",
+            margin: { xs: "0.25rem", sm: "0.25rem", md: "0.5rem" },
             borderRadius: "0.5rem",
             minHeight: "75vh",
             padding: "0.25rem",
-            display: "grid",
-            placeItems: "center",
           }}
         >
-          CashPage
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              maxWidth: "800px",
+              border: "1px solid black",
+              height: "200px",
+              margin: "auto",
+            }}
+          >
+            
+          </Box>
         </Card>
       </Dashboard>
     </>
