@@ -7,10 +7,6 @@ import { useEffect } from "react";
 function LandingPage() {
   const { AuthServices } = useAuthContext();
 
-  useEffect(() => {
-    AuthServices.checkSession();
-  }, [AuthServices]);
-
   return (
     <>
       {/* START: Navbar */}

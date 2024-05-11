@@ -122,6 +122,7 @@ const RequestResetPasswordPage = () => {
               }}
               variant="contained"
               onClick={onRequestSubmit}
+              disabled={requestProcess}
             >
               {requestProcess ? <CircularProgress size={25} /> : <>{"Login"}</>}
             </Button>

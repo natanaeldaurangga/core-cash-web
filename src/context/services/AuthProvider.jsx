@@ -8,16 +8,18 @@ const AuthProvider = ({ children }) => {
   const { ApiAttribute, ToggleDialog } = useGlobalContext();
 
   const checkSession = () => {
-    axios.defaults.headers.common = getAuthorization();
+    axios.defaults.headers.common["Authorization"] = getAuthorization();
+    // console.log(getAuthorization());
     let result = false;
     axios
       .get(ApiAttribute.API_URL + "Auth/CheckSession")
       .then((res) => {
-        if (res.status == 200) ToggleDialog.session.setSessionDialog(true);
-        result = true;
+        if (res.status == 200) result = true;
       })
       .catch((err) => {
         result = false;
+        if (err.response.status == 401)
+          ToggleDialog.session.setSessionDialog(true);
       });
 
     return result;
@@ -48,7 +50,7 @@ const AuthProvider = ({ children }) => {
     if (params?.password) payload.password = params?.password;
     if (params?.confirmPassword)
       payload.confirmPassword = params?.confirmPassword;
-
+    console.log(params);
     return await axios.put(
       ApiAttribute.API_URL + "Auth/ResetPassword/" + token,
       params

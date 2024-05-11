@@ -9,11 +9,17 @@ import RequestResetPasswordPage from "../pages/auth/RequestResetPasswordPage";
 import ConfirmEmail from "../pages/info/ConfirmEmail";
 import ConfirmedEmail from "../pages/info/ConfirmedEmail";
 import CashPage from "../pages/app/cash/CashPage";
+import { useEffect } from "react";
 
-const userProtect = (component, authServices) => {
+export const UserProtect = (component, authServices) => {
   if (!authServices.getAuthorization()) {
     return <Navigate to={"/login"} />;
   }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    authServices.checkSession();
+  }, [authServices]);
 
   return <>{component}</>;
 };
@@ -30,7 +36,10 @@ const AppRouter = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/forgot-password" element={<RequestResetPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route
+          path="/reset-password/:resetToken"
+          element={<ResetPasswordPage />}
+        />
         {/* END: Auth Pages */}
 
         {/* START: Information Page */}
@@ -41,11 +50,11 @@ const AppRouter = () => {
         {/* START: Need Authorization Pages */}
         <Route
           path="/app"
-          element={userProtect(<DashboardPage />, AuthServices)}
+          element={UserProtect(<DashboardPage />, AuthServices)}
         />
         <Route
           path="/app/cash"
-          element={userProtect(<CashPage />, AuthServices)}
+          element={UserProtect(<CashPage />, AuthServices)}
         />
         {/* END: Need Authorization Pages */}
       </Routes>

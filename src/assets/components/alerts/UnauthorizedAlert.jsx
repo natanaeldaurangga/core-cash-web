@@ -10,28 +10,34 @@ import {
 import { useGlobalContext } from "../../../context/services/GlobalProvider";
 import { useAuthContext } from "../../../context/services/AuthProvider";
 
-const SessionEndAlert = () => {
+const UnauthorizedAlert = () => {
   const { ToggleDialog } = useGlobalContext();
   const { AuthServices } = useAuthContext();
+
+  const handleLogout = () => {
+    AuthServices.logout();
+  };
+
   return (
     <>
       <Dialog
-        open={ToggleDialog.session.sessionDialog}
+        open={ToggleDialog.unauthorized.UnauthorizedDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        onClose={handleLogout}
       >
-        <DialogTitle>{"Session telah berakhir"}</DialogTitle>
+        <DialogTitle>{"Unauthorized"}</DialogTitle>
         <DialogContent sx={{ width: "100%" }}>
           <DialogContentText fontSize={"0.875rem"}>
-            Session anda telah berakhir, silahkan login kembali
+            {"Anda tidak memiliki otorisasi untuk mengakses fitur ini"}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => AuthServices.logout()}>Agree</Button>
+          <Button onClick={handleLogout}>Agree</Button>
         </DialogActions>
       </Dialog>
     </>
   );
 };
 
-export default SessionEndAlert;
+export default UnauthorizedAlert;

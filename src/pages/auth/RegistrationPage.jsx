@@ -13,9 +13,12 @@ import { useNavigate } from "react-router-dom";
 import AppLogo from "../../assets/components/Utility/AppLogo";
 import { useAuthContext } from "../../context/services/AuthProvider";
 import FieldError from "../../utilities/FieldError";
+import { useGlobalContext } from "../../context/services/GlobalProvider";
 
 const RegistrationPage = () => {
   const { AuthServices } = useAuthContext();
+
+  const { ToggleDialog } = useGlobalContext();
 
   const [registerProcess, setRegisterProcess] = useState(false);
 
@@ -61,6 +64,9 @@ const RegistrationPage = () => {
           const errors = err?.response?.data?.errors;
           setFieldErrors({ ...fieldErrors, ...errors });
         }
+
+        if (status === 401 || status === 403)
+          ToggleDialog.unauthorized.setUnauthorized(true);
 
         if (status > 400 && status < 500) {
           const errors = err.response.data;

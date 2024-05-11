@@ -23,7 +23,6 @@ const UserProfile = ({ open, handleClose }) => {
 
   useEffect(() => {
     const userData = AuthServices.authData();
-    console.log(userData);
     setUserData(userData);
   }, [AuthServices]);
 

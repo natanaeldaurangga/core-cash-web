@@ -17,11 +17,13 @@ const GlobalProvider = ({ children }) => {
     BASE_URL,
     API_URL,
     IMAGE_URL,
-    getImage
+    getImage,
   };
 
   const [sessionDialog, setSessionDialog] = useState(false);
   const [logoutDialog, setLogoutDialog] = useState(false);
+  const [errorDialog, setErrorDialog] = useState(false);
+  const [unauthorizedDialog, setUnauthorizedDialog] = useState(false);
 
   const ToggleDialog = {
     session: {
@@ -31,6 +33,14 @@ const GlobalProvider = ({ children }) => {
     logout: {
       logoutDialog,
       setLogoutDialog,
+    },
+    error: {
+      errorDialog,
+      setErrorDialog,
+    },
+    unauthorized: {
+      unauthorizedDialog,
+      setUnauthorizedDialog,
     },
   };
 
